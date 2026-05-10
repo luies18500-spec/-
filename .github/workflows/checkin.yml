@@ -1,0 +1,25 @@
+name: 每日签到
+
+on:
+  schedule:
+    # 每天北京时间 8:07 执行 (UTC+8 = 0:07 UTC)
+    # 选 7 分而非整点，避免 GitHub 整点调度拥堵
+    - cron: "7 0 * * *"
+  workflow_dispatch:  # 支持手动触发
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 执行签到
+        run: python checkin.py
+        env:
+          HONGQIYE_USERNAME: ${{ secrets.HONGQIYE_USERNAME }}
+          HONGQIYE_PASSWORD: ${{ secrets.HONGQIYE_PASSWORD }}
